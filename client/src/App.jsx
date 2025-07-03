@@ -31,7 +31,7 @@ import CreateAnnouncement from './pages/admin/CreateAnnouncement';
 import './App.css';
 
 // Configure axios defaults
-axios.defaults.baseURL = 'http://localhost:4000';
+axios.defaults.baseURL = 'https://campusconnect-backend-724n.onrender.com';
 axios.defaults.withCredentials = true;
 
 function App() {
