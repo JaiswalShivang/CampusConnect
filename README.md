@@ -69,10 +69,6 @@ cd client
 npm run dev
 ```
 
-## 🌐 Deployment
-- **Frontend:** Deploy `client` folder to Vercel or Netlify. Set `VITE_API_URL` to your backend URL in the dashboard.
-- **Backend:** Deploy `server` folder to Render or Railway. Set all environment variables in the dashboard.
-- **Database:** Use MongoDB Atlas (cloud, free tier available).
 
 
 ## 🤝 Contributing
