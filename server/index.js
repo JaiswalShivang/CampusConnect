@@ -20,8 +20,6 @@ app.use(cookieParser());
 app.use(cors({
   origin: ['https://campusconnect-tau.vercel.app/'],
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "x-csrf-token"],
 }));
 app.use(fileUpload({
   useTempFiles: true,
