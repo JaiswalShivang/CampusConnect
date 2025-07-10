@@ -2,22 +2,15 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { uploadImagetoCloudinary } = require("../utils/imageUploader");
 const jwt = require("jsonwebtoken");
-require("dotenv").config()
+require("dotenv").config();
+
 
 exports.signup = async (req, res) => {
   try {
     const { name, collegemailid, gender, phone, role, password } = req.body;
     const file = req.files?.photo;
 
-    if (
-      !name ||
-      !collegemailid ||
-      !gender ||
-      !phone ||
-      !role ||
-      !password ||
-      !file
-    ) {
+    if (!name || !collegemailid || !gender || !phone || !role || !password || !file) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
@@ -36,7 +29,7 @@ exports.signup = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const createUser = await User.create({
+    await User.create({
       name,
       collegemailid,
       gender,
@@ -46,29 +39,9 @@ exports.signup = async (req, res) => {
       photo: uploadResult.secure_url,
     });
 
-    // Generate JWT token
-    const payload = {
-      id: createUser._id,
-      role: createUser.role,
-      email: createUser.collegemailid,
-    };
-
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "7d" });
-
-    const userData = createUser.toObject();
-    userData.token = token;
-    userData.password = undefined;
-
-    const options = {
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      httpOnly: true,
-    };
-
-    return res.cookie("token", token, options).status(201).json({
+    return res.status(200).json({
       success: true,
-      message: "User registered successfully",
-      token,
-      user: userData,
+      message: "User created successfully",
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -118,20 +91,21 @@ exports.login = async (req, res) => {
     const userData = user.toObject();
     userData.token = token;
     userData.password = undefined;
-    
+
     const options = {
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        httpOnly: true,
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      httpOnly: true,
     };
-    res.cookie("token", token, options).status(200).json({
-        success: true,
-        token,
-        user: userData,
-        message: "Logged in successfully",
-      });
+
+    return res.cookie("token", token, options).status(200).json({
+      success: true,
+      message: "Logged in successfully",
+      token,
+      user: userData,
+    });
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Server error while logging in",
     });
